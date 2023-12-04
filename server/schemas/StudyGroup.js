@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
+const { Schema, Types } = mongoose;
 
-export const StudyGroupSchema = new mongoose.Schema({
-  _id: ObjectId("group_id"),
-  groupName: "Study Group Name",
-  members: [ObjectId("user_id_1"), ObjectId("user_id_2")],
-  notes: [ObjectId("note_id_1"), ObjectId("note_id_2")],
-  created_at: ISODate("timestamp"),
-  updated_at: ISODate("timestamp"),
+export const StudyGroupSchema = new Schema({
+  groupName: { type: String, required: true },
+  members: [{ type: Types.ObjectId, ref: "userSchema" }],
+  notes: [{ type: Types.ObjectId, ref: "noteSchema" }],
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("studyGroupSchema", StudyGroupSchema);
+const StudyGroupModel = mongoose.model("StudyGroup", StudyGroupSchema);
+
+export default StudyGroupModel;

@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-export const ClassSchema = new mongoose.Schema({
-  _id: ObjectId("class_id"),
-  className: "Class Name",
-  description: "Class Description",
-  created_at: ISODate("timestamp"),
-  updated_at: ISODate("timestamp"),
+export const ClassSchema = new Schema({
+  className: { type: String, required: true },
+  description: { type: String },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("classSchema", ClassSchema);
+const ClassModel = mongoose.model("Class", ClassSchema);
+
+export default ClassModel;

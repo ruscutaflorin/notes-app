@@ -1,16 +1,19 @@
 import mongoose from "mongoose";
 
-export const NoteSchema = new mongoose.Schema({
-  _id: ObjectId("note_id"),
-  userId: ObjectId("user_id"),
-  title: "Note Title",
-  content: "Markdown text content",
-  attachments: ["attachment_id_1", "attachment_id_2"],
-  classId: ObjectId("class_id"),
-  labels: ["label1", "label2"],
-  keywords: ["keyword1", "keyword2"],
-  created_at: ISODate("timestamp"),
-  updated_at: ISODate("timestamp"),
+const { Schema } = mongoose;
+
+export const NoteSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  title: { type: String, required: true },
+  content: { type: String },
+  attachments: [{ type: Schema.Types.ObjectId, ref: "Attachment" }],
+  classId: { type: Schema.Types.ObjectId, ref: "Class" },
+  labels: [{ type: String }],
+  keywords: [{ type: String }],
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("noteSchema", NoteSchema);
+const NoteModel = mongoose.model("Note", NoteSchema);
+
+export default NoteModel;
