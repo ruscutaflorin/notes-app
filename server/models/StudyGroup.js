@@ -1,14 +1,32 @@
-import mongoose from "mongoose";
-const { Schema, Types } = mongoose;
+import { sequelize } from "./config/db.js";
+import { DataTypes } from 'sequelize';
+import User from './models/user.js';
+import Note from './models/note.js'; 
 
-const StudyGroupSchema = new Schema({
-  groupName: { type: String, required: true },
-  members: [{ type: Types.ObjectId, ref: "userSchema" }],
-  notes: [{ type: Types.ObjectId, ref: "noteSchema" }],
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now },
+const StudyGroup = sequelize.define('StudyGroup', {
+  groupName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
 });
 
-const StudyGroupModel = mongoose.model("StudyGroup", StudyGroupSchema);
+// Definirea relațiilor între modele
+StudyGroup.belongsToMany(User, { through: 'StudyGroupMember', foreignKey: 'groupId', otherKey: 'userId' });
+StudyGroup.belongsToMany(Note, { through: 'StudyGroupNote', foreignKey: 'groupId', otherKey: 'noteId' });
 
-export default StudyGroupModel;
+// Sincronizare model cu baza de date (aceasta creează tabela)
+StudyGroup.sync().then(() => {
+  console.log('Model sincronizat cu baza de date');
+}).catch((err) => {
+  console.error('Eroare la sincronizare model cu baza de date:', err);
+});
+
+export default StudyGroup;

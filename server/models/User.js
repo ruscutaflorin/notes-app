@@ -1,15 +1,35 @@
-import mongoose from "mongoose";
 
-const { Schema } = mongoose;
+import { sequelize } from './config/db.js'; // Asigură-te că este calea corectă către fișierul cu instanța Sequelize
+import { DataTypes } from 'sequelize';
 
-const UserSchema = new Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now },
+const User = sequelize.define('User', {
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
 });
 
-const UserModel = mongoose.model("User", UserSchema);
+// Sincronizare model cu baza de date (aceasta creează tabela)
+User.sync().then(() => {
+  console.log('Model sincronizat cu baza de date');
+}).catch((err) => {
+  console.error('Eroare la sincronizare model cu baza de date:', err);
+});
 
-export default UserModel;
+export default User;
