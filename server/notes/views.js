@@ -55,7 +55,6 @@ export const addGroup = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
     const data = req.body;
-    console.log(data);
     const response = await addGroupService(data);
     return res.status(201).json(response);
   } catch (err) {

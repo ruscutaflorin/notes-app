@@ -1,11 +1,6 @@
 import { db } from "./config/db.js";
 import express from "express";
 import cors from "cors";
-import UserModel from "./models/User.js";
-import StudyGroupModel from "./models/StudyGroup.js";
-import ClassModel from "./models/Class.js";
-import NoteModel from "./models/Note.js";
-import AttachmentModel from "./models/Attachment.js";
 import { router } from "./router.js";
 const app = express();
 

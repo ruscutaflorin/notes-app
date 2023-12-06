@@ -8,7 +8,6 @@ export async function loginView(req, res) {
     res.status(201).json(user);
   } catch (err) {
     console.error(err);
-
     return res.status(501).json(err.message);
   }
 }
