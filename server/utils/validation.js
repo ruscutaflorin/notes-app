@@ -25,7 +25,6 @@ export const validateClass = [
 export const validateNote = [
   check("title").isString().notEmpty(),
   check("content").optional().isString(),
-  check("classId").optional().isMongoId(),
 ];
 
 export const validateStudyGroup = [
