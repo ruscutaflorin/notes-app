@@ -18,5 +18,5 @@ export const router = express.Router();
 router.post("/add-note", validateNote, addNote);
 router.post("/add-attachment", validateAttachment, addAttachment);
 router.post("/add-class", validateClass, addClass);
-router.get("/add-group", validateStudyGroup, addGroup);
+router.post("/add-group", validateStudyGroup, addGroup);
 router.get("/get-notes", getNotesByUser);
