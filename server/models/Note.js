@@ -1,9 +1,5 @@
-import { sequelize } from "../config/db.js"; // Asigură-te că este calea corectă către fișierul cu instanța Sequelize
+import { sequelize } from "../config/db.js";
 import { DataTypes } from "sequelize";
-import Attachment from "./Attachment.js";
-import User from "./User.js";
-import Class from "./Class.js";
-import NoteUser from "./NoteUser.js"; // Import the junction table model
 
 const Note = sequelize.define("Note", {
   userId: {
@@ -15,11 +11,11 @@ const Note = sequelize.define("Note", {
     allowNull: false,
   },
   content: {
-    type: DataTypes.STRING, // sau TEXT, în funcție de necesități
+    type: DataTypes.STRING,
     allowNull: true,
   },
   classId: {
-    type: DataTypes.INTEGER, // sau DataTypes.UUID, în funcție de tipul id-ului Class-ului
+    type: DataTypes.INTEGER,
     allowNull: true,
   },
   labels: {

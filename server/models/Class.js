@@ -1,4 +1,4 @@
-import { sequelize } from "../config/db.js"; // Asigură-te că este calea corectă către fișierul cu instanța Sequelize
+import { sequelize } from "../config/db.js";
 import { DataTypes } from "sequelize";
 
 const Class = sequelize.define("Class", {
@@ -7,7 +7,7 @@ const Class = sequelize.define("Class", {
     allowNull: false,
   },
   description: {
-    type: DataTypes.STRING, // sau TEXT, în funcție de necesități
+    type: DataTypes.STRING,
     allowNull: true,
   },
 });

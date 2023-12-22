@@ -1,4 +1,4 @@
-import { sequelize } from "../config/db.js"; // Asigură-te că este calea corectă către fișierul cu instanța Sequelize
+import { sequelize } from "../config/db.js";
 import { DataTypes } from "sequelize";
 
 const Attachment = sequelize.define("Attachment", {
