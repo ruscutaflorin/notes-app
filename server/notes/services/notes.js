@@ -3,9 +3,12 @@ import NoteModel from "../../models/Note.js";
 import ClassModel from "../../models/Class.js";
 import AttachmentModel from "../../models/Attachment.js";
 import UserModel from "../../models/User.js";
+
 export const addGroupService = async (data) => {
   try {
-    const newStudyGroup = await StudyGroupModel.create(data);
+    const newStudyGroup = await StudyGroupModel.create({
+      groupName: data,
+    });
     return newStudyGroup;
   } catch (error) {
     console.error(error);
@@ -38,8 +41,20 @@ export const addAttachmentService = async (data) => {
     console.error(error);
   }
 };
+export const getUsersById = async (data) => {
+  try {
+    const users = await UserModel.findAll({
+      where: {
+        id: data,
+      },
+    });
+    return users;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-export const getUserById = async (data) => {
+export const getUserIdByUsername = async (data) => {
   try {
     const user = await UserModel.findOne({
       where: {
@@ -51,6 +66,7 @@ export const getUserById = async (data) => {
     console.error(error);
   }
 };
+
 export const getUserNotes = async (data) => {
   try {
     const notes = await NoteModel.findAll({
@@ -59,13 +75,6 @@ export const getUserNotes = async (data) => {
       },
     });
     return notes;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const editNoteById = async (data) => {
-  try {
   } catch (error) {
     console.error(error);
   }

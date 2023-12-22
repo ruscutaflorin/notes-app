@@ -3,8 +3,9 @@ import {
   addAttachmentService,
   addClassService,
   addGroupService,
-  getUserById,
   getUserNotes,
+  getUsersById,
+  getUserIdByUsername,
 } from "./services/notes.js";
 import { validationResult } from "express-validator";
 
@@ -56,9 +57,16 @@ export const addGroup = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const data = req.body;
-    const response = await addGroupService(data);
-    return res.status(201).json(response);
+
+    const { groupName, userIDs, noteIds } = req.body;
+    const studyGroup = await addGroupService(groupName);
+    const users = await getUsersById(userIDs);
+    const notes = await getUserNotes(noteIds);
+
+    await studyGroup.addUsers(users);
+    await studyGroup.addNotes(notes);
+
+    return res.status(201).json("StudyGroup created successfully");
   } catch (err) {
     return res.status(501).json(err.message);
   }
@@ -70,7 +78,7 @@ export const getUserByUsername = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const response = await getUserById(req.query.username);
+    const response = await getUserIdByUsername(req.query.username);
     return res.status(201).json(response);
   } catch (error) {
     return res.status(501).json(error.message);
@@ -83,7 +91,7 @@ export const getNotesByUser = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const userId = await getUserById(req.query.username);
+    const userId = await getUsersById(req.query.username);
     const response = await getUserNotes(userId);
     return res.status(201).json(response);
   } catch (error) {

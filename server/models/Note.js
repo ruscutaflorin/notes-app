@@ -7,7 +7,7 @@ import NoteUser from "./NoteUser.js"; // Import the junction table model
 
 const Note = sequelize.define("Note", {
   userId: {
-    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   title: {
@@ -31,14 +31,5 @@ const Note = sequelize.define("Note", {
     defaultValue: [],
   },
 });
-
-// Sincronizare model cu baza de date (aceasta creează tabela)
-Note.sync()
-  .then(() => {
-    console.log("Model sincronizat cu baza de date");
-  })
-  .catch((err) => {
-    console.error("Eroare la sincronizare model cu baza de date:", err);
-  });
 
 export default Note;
