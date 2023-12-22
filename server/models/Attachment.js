@@ -1,13 +1,15 @@
-import mongoose from "mongoose";
+import { sequelize } from "../config/db.js"; // Asigură-te că este calea corectă către fișierul cu instanța Sequelize
+import { DataTypes } from "sequelize";
 
-const { Schema } = mongoose;
-
-const AttachmentSchema = new Schema({
-  type: { type: String, required: true },
-  url: { type: String, required: false },
-  created_at: { type: Date, default: Date.now },
+const Attachment = sequelize.define("Attachment", {
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  url: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
-const AttachmentModel = mongoose.model("Attachment", AttachmentSchema);
-
-export default AttachmentModel;
+export default Attachment;

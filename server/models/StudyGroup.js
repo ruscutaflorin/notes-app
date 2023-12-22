@@ -1,14 +1,13 @@
-import mongoose from "mongoose";
-const { Schema, Types } = mongoose;
+import { sequelize } from "../config/db.js";
+import { DataTypes } from "sequelize";
+import User from "./User.js";
+import Note from "./Note.js";
 
-const StudyGroupSchema = new Schema({
-  groupName: { type: String, required: true },
-  members: [{ type: Types.ObjectId, ref: "userSchema" }],
-  notes: [{ type: Types.ObjectId, ref: "noteSchema" }],
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now },
+const StudyGroup = sequelize.define("StudyGroup", {
+  groupName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
 
-const StudyGroupModel = mongoose.model("StudyGroup", StudyGroupSchema);
-
-export default StudyGroupModel;
+export default StudyGroup;

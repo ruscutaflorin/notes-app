@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
+import { Sequelize } from "sequelize";
 
-mongoose.connect(
-  "mongodb+srv://admin:admin@app-notes-cluster.dgqxe4y.mongodb.net/"
+export const sequelize = new Sequelize(
+  "postgres://postgres:admin@localhost:5432/notes-app"
 );
-
-export const db = mongoose.connection;
