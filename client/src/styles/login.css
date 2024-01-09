@@ -7,31 +7,11 @@
   font-family: "Mulish", sans-serif;
 }
 
-body {
+.wrapper {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.logo {
-  position: absolute;
-  top: 22px;
-  left: 22px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo img {
-  width: 48px;
-}
-
-.logo a {
-  font-size: 24px;
-  font-weight: bold;
-  text-decoration: none;
-  color: #464646;
 }
 
 .container {

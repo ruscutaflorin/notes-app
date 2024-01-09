@@ -1,0 +1,67 @@
+/* notesPage.css */
+.container-wrapper {
+  height: 100vh;
+  display: flex;
+  margin-top: 10vh;
+}
+
+.notes-page {
+  padding: 20px;
+}
+
+.notes-page h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.notes-page h3 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+.notes-page ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.notes-page button {
+  background-color: #6b43ff;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.notes-page button:hover {
+  background-color: #5222fd;
+}
+
+.notes-list {
+  margin-top: 20px;
+}
+
+/* AddNoteForm specific styles */
+.add-note-form {
+  margin-bottom: 30px;
+}
+
+.add-note-form form {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+}
+
+.add-note-form input,
+.add-note-form textarea {
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.add-note-form button {
+  width: 150px;
+  align-self: flex-end;
+}
