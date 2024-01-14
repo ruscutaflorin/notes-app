@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../styles/landingPage.css";
+import "../../styles/landingPage.css";
 
 const LandingPage = () => {
   return (
@@ -29,7 +29,7 @@ const LandingPage = () => {
               log in to get started.
             </p>
             <Link to="/notes" className="cta-button">
-              Get Started
+              ADD NOTES
             </Link>
           </section>
         </main>

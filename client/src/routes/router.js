@@ -1,9 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import LoginPage from "../pages/login/login";
 import RegisterPage from "../pages/login/register";
 import ForgotPasswordPage from "../pages/login/forgot-password";
 import ChangePasswordPage from "../pages/login/change-password";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/navbar/Navbar";
 import HomePage from "../pages/home";
 import NotesPage from "../pages/notesPages";
 import ErrorPage from "../routes/error-page";
@@ -43,6 +43,11 @@ const router = createBrowserRouter([
         path: "/forgot-password",
         element: <ForgotPasswordPage />,
         errorElement: <ErrorPage />,
+      },
+      // Add a default redirect from the root path to the "/login" route
+      {
+        index: true,
+        element: <Navigate to="/login" />,
       },
     ],
   },

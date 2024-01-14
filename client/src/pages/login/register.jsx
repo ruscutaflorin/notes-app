@@ -1,5 +1,5 @@
 import React from "react";
-import RegisterComponent from "../../components/Register";
+import RegisterComponent from "../../components/auth/Register";
 const RegisterPage = () => {
   return (
     <div>

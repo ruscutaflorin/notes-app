@@ -1,6 +1,17 @@
 import { check } from "express-validator";
-export const validateUser = [
+export const validateRegister = [
   check("username").isString(),
+  check("email")
+    .isEmail()
+    .custom((value) => {
+      if (!value.endsWith("@stud.ase.ro")) {
+        throw new Error("Email must be from @stud.ase.ro domain");
+      }
+      return true;
+    }),
+  check("password").isString().isLength({ min: 6 }),
+];
+export const validateLogin = [
   check("email")
     .isEmail()
     .custom((value) => {

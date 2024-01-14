@@ -1,11 +1,20 @@
 import bcrypt from "bcrypt";
 import { AuthenticationError } from "../../utils/errors.js";
 import UserModel from "../../models/User.js";
-
 const saltRounds = 10;
 
 export const registerService = async (user) => {
   try {
+    const existingUser = await UserModel.findOne({
+      where: {
+        email: user.email,
+      },
+    });
+
+    if (existingUser) {
+      throw Error("User with this email already exists");
+    }
+
     const hashedPassword = await bcrypt.hash(user.password, saltRounds);
     const userSecure = { ...user, password: hashedPassword };
 
@@ -19,7 +28,9 @@ export const registerService = async (user) => {
 export const loginService = async (userEmail, userPassword) => {
   try {
     const foundUser = await UserModel.findOne({
-      email: userEmail,
+      where: {
+        email: userEmail,
+      },
     });
     if (!foundUser) {
       throw new AuthenticationError();
