@@ -44,7 +44,6 @@ const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
         errorElement: <ErrorPage />,
       },
-      // Add a default redirect from the root path to the "/login" route
       {
         index: true,
         element: <Navigate to="/login" />,

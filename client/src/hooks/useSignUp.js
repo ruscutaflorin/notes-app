@@ -22,22 +22,18 @@ export const useSignUp = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        // Successful response
         localStorage.setItem("user", email);
 
-        // Update the auth context
         dispatch({ type: "LOGIN", payload: { email } });
 
         setIsLoading(false);
         console.log("SignUp successful:", response.data);
       } else {
-        // Error response
         setIsLoading(false);
         setError("error");
         console.log("SignUp failed:", response.data);
       }
     } catch (error) {
-      // Network error or other issues
       setIsLoading(false);
       setError("error");
       console.log("SignIn failed:", error);
