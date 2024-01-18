@@ -5,7 +5,7 @@ export async function loginView(req, res) {
   try {
     const { email, password } = req.body;
     const user = await loginService(email, password);
-    res.status(201).json(user);
+    res.status(200).json(user);
   } catch (err) {
     console.error(err);
     return res.status(501).json(err.message);

@@ -1,33 +1,38 @@
-import React from "react";
-import "../styles/login.css";
-import image from "../images/logo.jpg";
+import React, { useState } from "react";
+import "../../styles/login.css";
+import useLogin from "../../hooks/useLogin";
 
 const LoginComponent = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { logIn, error, isLoading } = useLogin();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await logIn(email, password);
+    } catch (error) {
+      console.log("Login failed:", error.response);
+    }
+  };
+
   return (
     <div className="wrapper">
       <div className="container">
         <h1>Login to your account 👏</h1>
-        <div className="social-login">
-          <button className="google">
-            <i className="bx bxl-google" />
-            Use Google
-          </button>
-          <button className="google">
-            <i className="bx bxl-apple" />
-            Use Apple
-          </button>
-        </div>
         <div className="divider">
           <div className="line" />
-          <p>Or</p>
           <div className="line" />
         </div>
-        <form>
+        <form onSubmit={handleLogin}>
           <label htmlFor="email">Email:</label>
           <div className="custome-input">
             <input
               type="email"
+              id="email"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Your Email"
               autoComplete="off"
             />
@@ -37,12 +42,17 @@ const LoginComponent = () => {
           <div className="custome-input">
             <input
               type="password"
+              id="password"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Your Password"
             />
             <i className="bx bx-lock-alt" />
           </div>
-          <button className="login">Login</button>
+          <button type="submit" className="login">
+            Login
+          </button>
           <div className="links">
             <a href="/forgot-password">Reset Password</a>
             <a href="/register">Don't have an account?</a>
