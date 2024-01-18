@@ -1,8 +1,12 @@
 /* notesPage.css */
 .container-wrapper {
   height: 100vh;
+  width: 60%;
   display: flex;
-  margin-top: 10vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5% auto;
 }
 
 .notes-page {
@@ -68,9 +72,5 @@
 
 .notes-wrapper {
   display: flex;
-  flex-direction: column;
-}
-
-.component-wrapper {
-  margin: 5% auto;
+  flex-direction: row;
 }

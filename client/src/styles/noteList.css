@@ -1,0 +1,8 @@
+/* notesList.css */
+
+.notes-list {
+  display: grid;
+  max-width: 90%;
+  gap: 20px;
+  margin: 0 auto;
+}
