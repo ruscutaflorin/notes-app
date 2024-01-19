@@ -210,3 +210,52 @@ export const editNoteService = async (noteId, updatedData) => {
     throw error;
   }
 };
+
+export const getGroupInfoByIdService = async (groupId) => {
+  try {
+    const groupInfo = await StudyGroup.findByPk(groupId);
+
+    if (!groupInfo) {
+      throw new Error("Study group not found");
+    }
+
+    return groupInfo;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Internal server error");
+  }
+};
+
+export const getGroupNotesByIdService = async (groupId) => {
+  try {
+    const group = await StudyGroup.findByPk(groupId, {
+      include: [{ model: Note }],
+    });
+
+    if (!group) {
+      throw new Error(`Study group with ID ${groupId} not found`);
+    }
+
+    return group.Notes || [];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const getGroupsByUserIdService = async (userId) => {
+  try {
+    const user = await User.findByPk(userId, {
+      include: [{ model: StudyGroup }],
+    });
+
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
+    const groupIds = user.StudyGroups.map((group) => group.id);
+    return groupIds || [];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

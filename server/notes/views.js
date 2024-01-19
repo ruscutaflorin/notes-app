@@ -10,6 +10,9 @@ import {
   getNoteInfoById,
   deleteNoteByIdService,
   editNoteService,
+  getGroupInfoByIdService,
+  getGroupNotesByIdService,
+  getGroupsByUserIdService,
 } from "./services/notes.js";
 import { validationResult } from "express-validator";
 
@@ -166,5 +169,41 @@ export const editNote = async (req, res) => {
     return res.status(200).json(updatedNote);
   } catch (err) {
     return res.status(501).json(err.message);
+  }
+};
+
+export const getGroupInfoById = async (req, res) => {
+  try {
+    const { groupId } = req.query;
+    const groupInfo = await getGroupInfoByIdService(groupId);
+
+    return res.status(200).json(groupInfo);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getGroupNotesById = async (req, res) => {
+  try {
+    const { groupId } = req.query;
+    console.log("test");
+    const groupNotes = await getGroupNotesByIdService(groupId);
+    return res.status(200).json(groupNotes);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getGroupsByUserId = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const userGroups = await getGroupsByUserIdService(userId);
+
+    return res.status(200).json(userGroups);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

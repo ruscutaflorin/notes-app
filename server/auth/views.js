@@ -1,4 +1,8 @@
-import { loginService, registerService } from "./services/user.js";
+import {
+  loginService,
+  registerService,
+  changePasswordService,
+} from "./services/user.js";
 import { validationResult } from "express-validator";
 
 export async function loginView(req, res) {
@@ -25,3 +29,18 @@ export async function registerView(req, res) {
     return res.status(501).json(err.message);
   }
 }
+
+export const changePasswordController = async (req, res) => {
+  const { username, currentPassword, newPassword } = req.query;
+  try {
+    const result = await changePasswordService(
+      username,
+      currentPassword,
+      newPassword
+    );
+    console.log(result);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

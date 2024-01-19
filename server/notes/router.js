@@ -9,6 +9,9 @@ import {
   getNoteById,
   deleteNoteById,
   editNote,
+  getGroupInfoById,
+  getGroupNotesById,
+  getGroupsByUserId,
 } from "./views.js";
 import {
   validateAttachment,
@@ -28,3 +31,6 @@ router.get("/get-details", getDetailsByEmail);
 router.get("/get-attachments", getNoteById);
 router.delete("/delete-note", deleteNoteById);
 router.put("/edit-note", editNote);
+router.get("/get-group", getGroupInfoById);
+router.get("/get-group-notes", getGroupNotesById);
+router.get("/get-groups", getGroupsByUserId);

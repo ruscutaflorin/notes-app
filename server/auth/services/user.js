@@ -47,3 +47,41 @@ export const loginService = async (userEmail, userPassword) => {
     throw err;
   }
 };
+
+export const changePasswordService = async (
+  userId,
+  currentPassword,
+  newPassword
+) => {
+  try {
+    const user = await UserModel.findOne({
+      where: {
+        username: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const comparePassword = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!comparePassword) {
+      throw new Error("Current password is incorrect");
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    await UserModel.update(
+      { password: hashedNewPassword },
+      { where: { username: userId } }
+    );
+
+    return { success: true };
+  } catch (err) {
+    throw err;
+  }
+};
