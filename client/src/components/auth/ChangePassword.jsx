@@ -1,12 +1,19 @@
-// ChangePassword.js
 import React, { useState } from "react";
 import "../../styles/changePassword.css";
-
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 const ChangePasswordComponent = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "currentPassword") setCurrentPassword(value);

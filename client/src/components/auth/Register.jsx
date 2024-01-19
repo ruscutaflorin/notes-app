@@ -1,21 +1,34 @@
 import React, { useState } from "react";
 import "../../styles/register.css";
 import useSignUp from "../../hooks/useSignUp";
+import { useNavigate } from "react-router-dom";
 
 const RegisterComponent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [editableUsername, setEditableUsername] = useState("");
+  const [readOnlyUsername, setReadOnlyUsername] = useState("");
   const { signIn, error, isLoading } = useSignUp();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await signIn(email, password, username);
+      await signIn(email, password, editableUsername);
+      navigate("/home");
     } catch (error) {
       console.log("SignIn failed:", error.response);
     }
+  };
+
+  const handleEmailChange = (e) => {
+    const emailValue = e.target.value;
+    setEmail(emailValue);
+
+    const usernameFromEmail = emailValue.split("@")[0];
+    setEditableUsername(usernameFromEmail);
+    setReadOnlyUsername(usernameFromEmail);
   };
 
   return (
@@ -29,7 +42,7 @@ const RegisterComponent = () => {
             id="email"
             name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
           />
 
@@ -38,9 +51,15 @@ const RegisterComponent = () => {
             type="text"
             id="username"
             name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={readOnlyUsername}
+            readOnly
             required
+          />
+          {/* Hidden input for editable username */}
+          <input
+            type="hidden"
+            value={editableUsername}
+            onChange={(e) => setEditableUsername(e.target.value)}
           />
 
           <label htmlFor="password">Password:</label>
