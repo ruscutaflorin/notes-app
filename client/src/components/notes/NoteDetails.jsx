@@ -70,6 +70,12 @@ const NoteDetails = ({
   return isVisible ? (
     <Modal onClose={onClose}>
       <div className="note-details">
+        <div>
+          <strong>Note ID:</strong>
+          <ul>
+            <li key={0}>{editedNote.id}</li>
+          </ul>
+        </div>
         <h3>
           {isEditing ? (
             <input
@@ -82,6 +88,7 @@ const NoteDetails = ({
             editedNote.title
           )}
         </h3>
+
         {isEditing ? (
           <textarea
             name="content"

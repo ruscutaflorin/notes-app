@@ -59,7 +59,6 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create the note
     const response = await axios.post(
       "http://localhost:3001/api/notes/add-note",
       {
@@ -68,12 +67,10 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       }
     );
 
-    // Check if there's an attachment before trying to get the file extension
     if (formData.attachments && formData.attachments.name) {
       const part = formData.attachments.name.split(".");
       const fileExtension = part.length > 1 ? "." + part[part.length - 1] : "";
 
-      // Only proceed with adding attachment if fileExtension is defined
       if (fileExtension) {
         const res = await axios.post(
           "http://localhost:3001/api/notes/add-attachment",
@@ -87,7 +84,6 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       }
     }
 
-    // Reset the form data
     onAddNote(response.data);
     setFormData({
       id: Math.floor(Math.random() * 999999),
@@ -97,7 +93,7 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       classId: "",
       labels: [],
       keywords: [],
-      attachments: {}, // Ensure attachments is an object
+      attachments: {},
       attachmentUrl: [],
     });
 

@@ -1,20 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../../styles/navbar.css";
+import styles from "../../styles/navbar.module.css";
 import { Outlet } from "react-router-dom";
 import useLogout from "../../hooks/useLogout";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import UserDetails from "../user/UserDetails";
+
 const Navbar = () => {
   const { logOut } = useLogout();
   const handleClick = () => {
     logOut();
   };
   const { user } = useAuthContext();
+
   return (
     <>
-      <div className="top-menu">
-        <div className="logo">
+      <div className={styles.topmenu}>
+        <div className={styles.logo}>
           <img
             src="https://upload.wikimedia.org/wikipedia/ro/a/a3/Logo_ASE.png"
             alt="logo ase"
@@ -22,7 +24,7 @@ const Navbar = () => {
           <Link to="/home">Corigentii</Link>
         </div>
         {user ? (
-          <div className="authenticated">
+          <div className={styles.authenticated}>
             <ul>
               <div>
                 <UserDetails />
@@ -39,7 +41,7 @@ const Navbar = () => {
             </ul>
           </div>
         ) : (
-          <div className="unauthenticated">
+          <div className={styles.unauthenticated}>
             <ul>
               <li>
                 <Link to="/login">Login</Link>

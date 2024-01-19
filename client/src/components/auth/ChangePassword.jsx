@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../../styles/changePassword.css";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useEffect } from "react";
 const ChangePasswordComponent = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -9,6 +10,7 @@ const ChangePasswordComponent = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const navigate = useNavigate();
   const { user } = useAuthContext();
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -21,14 +23,18 @@ const ChangePasswordComponent = () => {
     else if (name === "confirmNewPassword") setConfirmNewPassword(value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your change password logic here
-    console.log("Change Password submitted:", {
-      currentPassword,
-      newPassword,
-      confirmNewPassword,
-    });
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/auth/change-password?username=${user.username}&currentPassword=${currentPassword}&newPassword=${newPassword}`
+      );
+
+      console.log("Change Password response:", response.data);
+    } catch (error) {
+      console.error("Error changing password:", error.response.data);
+    }
   };
 
   return (

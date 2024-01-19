@@ -6,3 +6,11 @@
   gap: 20px;
   margin: 30vh auto;
 }
+
+.wrapperNotes {
+  display: flex;
+}
+
+.pagination {
+  margin: auto;
+}

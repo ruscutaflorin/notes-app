@@ -1,50 +1,60 @@
-.top-menu {
+:local .topmenu {
   position: absolute;
   top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100vw;
-  height: 80px; /* Adjust the height as needed */
+  height: 80px;
   background-color: #333;
   padding: 0 30px;
   color: #fff;
 }
 
-.logo {
+:local .logo {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.logo img {
+:local .logo img {
   width: 48px;
 }
 
-.logo a {
+:local .logo a {
   font-size: 24px;
   font-weight: bold;
   text-decoration: none;
   color: #fff;
 }
 
-.top-menu ul {
+:local .topmenu ul {
   list-style-type: none;
   display: flex;
   gap: 20px;
 }
 
-.top-menu li {
+:local .topmenu li {
   margin-bottom: 10px;
 }
 
-.top-menu a {
+:local .topmenu a {
   text-decoration: none;
   color: #fff;
   font-size: 1rem;
   transition: color 0.3s ease;
 }
 
-.top-menu a:hover {
+:local .topmenu a:hover {
   color: #6b43ff;
+}
+
+:local .authenticated,
+:local .unauthenticated {
+  display: flex;
+  align-items: center;
+}
+
+:local button {
+  cursor: pointer;
 }

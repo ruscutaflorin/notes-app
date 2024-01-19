@@ -41,8 +41,15 @@ const NoteItem = ({ note, onClick }) => {
 
   return (
     <div key={note.id} className="note-item" onClick={onClick}>
-      <h3>{note.title}</h3>
-      <p>{note.content}</p>
+      <div>
+        <strong>{note.id}</strong>
+      </div>
+      <div>
+        <strong>Title:</strong> {note.title}
+      </div>
+      <div>
+        <strong>Content:</strong> {note.content}
+      </div>
       <div>
         <strong>User ID:</strong> {note.userId}
       </div>
@@ -75,7 +82,6 @@ const NoteItem = ({ note, onClick }) => {
           </ul>
         </div>
       )}
-
       {selectedPdf && (
         <Modal onClose={closePdfModal}>
           <Document
@@ -86,7 +92,6 @@ const NoteItem = ({ note, onClick }) => {
           </Document>
         </Modal>
       )}
-
       {selectedImage && (
         <Modal onClose={closeImageModal}>
           <img
