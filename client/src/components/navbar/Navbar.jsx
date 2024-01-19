@@ -4,6 +4,7 @@ import "../../styles/navbar.css";
 import { Outlet } from "react-router-dom";
 import useLogout from "../../hooks/useLogout";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import UserDetails from "../user/UserDetails";
 const Navbar = () => {
   const { logOut } = useLogout();
   const handleClick = () => {
@@ -23,6 +24,9 @@ const Navbar = () => {
         {user ? (
           <div className="authenticated">
             <ul>
+              <div>
+                <UserDetails />
+              </div>
               <li>
                 <Link to="/home">Home</Link>
               </li>
@@ -30,7 +34,6 @@ const Navbar = () => {
                 <Link to="/change-password">Change Password</Link>
               </li>
               <div>
-                <span>{user?.email}</span>
                 <button onClick={handleClick}>Log out</button>
               </div>
             </ul>

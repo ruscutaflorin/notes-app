@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import "../../styles/login.css";
 import useLogin from "../../hooks/useLogin";
-
+import { useNavigate } from "react-router-dom";
 const LoginComponent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { logIn, error, isLoading } = useLogin();
-
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await logIn(email, password);
+      const res = await logIn(email, password);
+      navigate("/home");
     } catch (error) {
       console.log("Login failed:", error.response);
     }
@@ -28,7 +29,7 @@ const LoginComponent = () => {
           <label htmlFor="email">Email:</label>
           <div className="custome-input">
             <input
-              type="email"
+              type="text"
               id="email"
               name="email"
               value={email}

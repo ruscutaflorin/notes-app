@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "../../styles/addNoteForm.css";
-import { useEffect } from "react";
+import axios from "axios";
 import Modal from "./Modal";
+import { useAuthContext } from "../../hooks/useAuthContext";
 const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
   const [formData, setFormData] = useState({
     id: Math.floor(Math.random() * 999999),
@@ -12,47 +13,8 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
     labels: [],
     keywords: [],
     attachments: [],
+    attachmentUrl: [],
   });
-
-  const handleAttachmentChange = async (e) => {
-    const file = e.target.files[0];
-
-    // // Convert FileList to an array of objects with random keys
-    // const attachments = Array.from(files).map((file) => ({
-    //   file: file,
-    //   type: file.type,
-    //   isPdf: file.name.toLowerCase().endsWith(".pdf"),
-    //   url: URL.createObjectURL(file),
-    // }));
-
-    // // Update state with the array of objects
-    setFormData((prevData) => ({
-      ...prevData,
-      attachments: file,
-    }));
-    const { url } = await fetch("http://localhost:3001/s3Url").then((res) =>
-      res.json()
-    );
-    await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      body: file,
-    });
-
-    const imageUrl = url.split("?")[0];
-    console.log(imageUrl);
-
-    // post requst to my server to store any extra data
-
-    const img = document.createElement("img");
-    img.src = imageUrl;
-    console.log(imageUrl);
-    document.body.appendChild(img);
-
-    console.log(url);
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,13 +24,69 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       [name]: value,
     }));
   };
+  const handleAttachmentChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || file.length === 0) {
+      // No files selected or user canceled file selection
+      return;
+    }
+
+    const parts = file.name.split(".");
+    const fileExtension = "." + parts[parts.length - 1];
+
+    setFormData((prevData) => ({
+      ...prevData,
+      attachments: file,
+    }));
+
+    // Fetch S3 URL for uploading the attachment
+    const { url } = await fetch(
+      `http://localhost:3001/s3Url?type=${fileExtension}`
+    ).then((res) => res.json());
+
+    // Upload the attachment to S3
+    await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      body: file,
+    });
+
+    // Save the S3 URL in the state (you may want to store this in the database)
+    setFormData((prevData) => ({
+      ...prevData,
+      attachmentUrl: url.split("?")[0],
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic, e.g., send data to the server
-    onAddNote(formData);
-    console.log("Form submitted with data:", formData);
-    /* setFormData({
+
+    // Create the note
+    const response = await axios.post(
+      "http://localhost:3001/api/notes/add-note",
+      {
+        userId: formData.userId,
+        ...formData,
+      }
+    );
+    const part = formData.attachments.name.split(".");
+    const fileExtension = "." + part[part.length - 1];
+    // Create an attachment
+    const res = await axios.post(
+      "http://localhost:3001/api/notes/add-attachment",
+      {
+        type: fileExtension,
+        url: formData.attachmentUrl,
+        userId: formData.userId,
+        noteId: formData.id,
+      }
+    );
+    // Reset the form data
+    onAddNote(response.data);
+    setFormData({
+      id: Math.floor(Math.random() * 999999),
       userId: "",
       title: "",
       content: "",
@@ -76,7 +94,10 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       labels: [],
       keywords: [],
       attachments: [],
-    }); */
+      attachmentUrl: [],
+    });
+
+    console.log("Form submitted with data:", formData);
   };
 
   return isVisible ? (

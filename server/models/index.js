@@ -1,3 +1,4 @@
+// index.js
 import { sequelize } from "../config/db.js";
 import User from "./User.js";
 import StudyGroup from "./StudyGroup.js";
@@ -5,6 +6,7 @@ import Note from "./Note.js";
 import Class from "./Class.js";
 import Attachment from "./Attachment.js";
 
+// Define Associations
 User.hasMany(Note, { foreignKey: "userId" });
 User.belongsToMany(StudyGroup, {
   through: "StudyGroupMember",
@@ -27,6 +29,7 @@ Note.belongsToMany(Attachment, {
   through: "NoteAttachment",
   foreignKey: "noteId",
   otherKey: "attachmentId",
+  onDelete: "CASCADE",
 });
 
 Class.hasMany(Note, { foreignKey: "classId" });
@@ -35,8 +38,10 @@ Attachment.belongsToMany(Note, {
   through: "NoteAttachment",
   foreignKey: "attachmentId",
   otherKey: "noteId",
+  onDelete: "CASCADE",
 });
 
+// Synchronize Models with the Database
 sequelize
   .sync()
   .then(() => {
@@ -45,3 +50,6 @@ sequelize
   .catch((err) => {
     console.error("Error synchronizing models with the database:", err);
   });
+
+// Export Models for Use in Other Files
+export { sequelize, User, StudyGroup, Note, Class, Attachment };

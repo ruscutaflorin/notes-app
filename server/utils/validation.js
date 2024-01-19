@@ -26,6 +26,7 @@ export const validateLogin = [
 export const validateAttachment = [
   check("type").isString().notEmpty(),
   check("url").optional().isString(),
+  check("userId").notEmpty(),
 ];
 
 export const validateClass = [

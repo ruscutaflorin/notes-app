@@ -1,46 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import NotesList from "../components/notes/NotesList";
 import AddNoteForm from "../components/notes/AddNoteForm";
 import "../styles/notesPage.css";
 import NoteDetails from "../components/notes/NoteDetails";
-import { useState } from "react";
-import tasks from "../files/tasks.pdf";
-import bacau from "../files/bacau.jpg";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
+
 const NotesPage = () => {
-  console.log(tasks);
+  const { user } = useAuthContext(); // Assuming your auth context provides the user's data, adjust accordingly
   const [isAddNoteFormVisible, setIsAddNoteFormVisible] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      userId: 123,
-      title: "First Note",
-      content: "This is the content of the first note.",
-      classId: 456,
-      labels: ["Label1", "Label2"],
-      keywords: ["Keyword1", "Keyword2"],
-      attachments: [bacau, tasks],
-    },
-    {
-      id: 2,
-      userId: 456,
-      title: "Second Note",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      classId: 789,
-      labels: ["Label3", "Label4"],
-      keywords: ["Keyword3", "Keyword4"],
-    },
-    {
-      id: 3,
-      userId: 789,
-      title: "Third Note",
-      content: "This is the content of the third note.",
-      classId: 123,
-      labels: ["Label5", "Label6"],
-      keywords: ["Keyword5", "Keyword6"],
-    },
-  ]);
+  const [notes, setNotes] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        if (user && user.username) {
+          const response = await axios.get(
+            `http://localhost:3001/api/notes/get-notes?username=${user.username}`
+          );
+          setNotes(response.data);
+        } else {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+      }
+    };
+
+    fetchNotes();
+  }, [user]);
 
   const handleAddNote = (newNote) => {
     setNotes((prevNotes) => [...prevNotes, newNote]);
@@ -53,9 +45,33 @@ const NotesPage = () => {
   const handleAddNoteClick = () => {
     setIsAddNoteFormVisible(!isAddNoteFormVisible);
   };
+
   const handleAddNoteFormClose = () => {
     setIsAddNoteFormVisible(false);
   };
+
+  const handleDeleteNote = (deletedNoteId) => {
+    // Update the state by filtering out the deleted note
+    setNotes((prevNotes) =>
+      prevNotes.filter((note) => note.id !== deletedNoteId)
+    );
+  };
+  const handleNoteUpdate = (updatedNote) => {
+    // Find the index of the updated note in the notes array
+    const updatedNoteIndex = notes.findIndex(
+      (note) => note.id === updatedNote.id
+    );
+
+    // If the note is found, update the state with the new data
+    if (updatedNoteIndex !== -1) {
+      setNotes((prevNotes) => {
+        const newNotes = [...prevNotes];
+        newNotes[updatedNoteIndex] = updatedNote;
+        return newNotes;
+      });
+    }
+  };
+  console.log(notes);
   return (
     <div className="container-wrapper notes-wrapper">
       <div className="component-wrapper">
@@ -66,7 +82,7 @@ const NotesPage = () => {
           isVisible={isAddNoteFormVisible}
         />
       </div>
-      <div className="component-wrapper">
+      <div className="component-wrapper-notes">
         <NotesList notes={notes} onNoteClick={handleNoteClick} />
       </div>
       <div className="component-wrapper">
@@ -75,6 +91,8 @@ const NotesPage = () => {
             note={selectedNote}
             isVisible={true}
             onClose={() => setSelectedNote(null)}
+            onDeleteNote={handleDeleteNote}
+            onNoteUpdate={handleNoteUpdate}
           />
         )}
       </div>

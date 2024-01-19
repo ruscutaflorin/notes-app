@@ -21,9 +21,9 @@ export const useLogin = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        localStorage.setItem("user", email);
-
-        dispatch({ type: "LOGIN", payload: { email } });
+        const { username } = response.data;
+        localStorage.setItem("user", username);
+        dispatch({ type: "LOGIN", payload: { username } });
 
         setIsLoading(false);
         console.log("LogIn successful:", response.data);

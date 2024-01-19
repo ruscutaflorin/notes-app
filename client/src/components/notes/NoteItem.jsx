@@ -9,37 +9,37 @@ const NoteItem = ({ note, onClick }) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-
   const handlePageChange = (newPageNumber) => {
     setPageNumber(newPageNumber);
   };
-
-  const openPdfModal = (pdf, e) => {
-    e.stopPropagation(); // Prevents the event from propagating to the parent div
-    setSelectedPdf(pdf);
+  const openPdfModal = (attachment, e) => {
+    e.stopPropagation();
+    setSelectedPdf(attachment.file);
+    console.log(attachment.file);
     setSelectedImage(null);
   };
 
-  const openImageModal = (image, e) => {
-    e.stopPropagation(); // Prevents the event from propagating to the parent div
-    setSelectedImage(image);
+  const openImageModal = (attachment, e) => {
+    e.stopPropagation();
+    setSelectedImage(attachment.file);
+    console.log(attachment.file);
     setSelectedPdf(null);
   };
 
   const closePdfModal = (e) => {
-    e.stopPropagation(); // Prevents the event from propagating to the parent div
-
+    e.stopPropagation();
     setSelectedPdf(null);
   };
 
   const closeImageModal = (e) => {
-    e.stopPropagation(); // Prevents the event from propagating to the parent div
+    e.stopPropagation();
     setSelectedImage(null);
   };
-  console.log(note.attachments);
+
   useEffect(() => {
     pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
   }, []);
+
   return (
     <div key={note.id} className="note-item" onClick={onClick}>
       <h3>{note.title}</h3>
@@ -62,7 +62,7 @@ const NoteItem = ({ note, onClick }) => {
           <ul>
             {note.attachments.map((attachment, index) => (
               <li key={index}>
-                {attachment.isPdf ? (
+                {attachment.fileExtension === ".pdf" ? (
                   <button onClick={(e) => openPdfModal(attachment, e)}>
                     Open PDF {index + 1}
                   </button>
@@ -90,7 +90,10 @@ const NoteItem = ({ note, onClick }) => {
 
       {selectedImage && (
         <Modal onClose={closeImageModal}>
-          <img src={selectedImage} alt="Selected Attachment" />
+          <img
+            src={URL.createObjectURL(selectedImage)}
+            alt="Selected Attachment"
+          />
         </Modal>
       )}
     </div>
