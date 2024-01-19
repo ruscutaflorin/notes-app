@@ -1,4 +1,3 @@
-// NoteItem.js
 import React, { useState } from "react";
 import "../../styles/noteItem.css";
 import { Document, Page, pdfjs } from "react-pdf";

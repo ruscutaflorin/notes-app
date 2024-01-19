@@ -26,7 +26,6 @@ const RegisterComponent = () => {
     const emailValue = e.target.value;
     setEmail(emailValue);
 
-    // Set the editable username to the part before '@' from the email
     const usernameFromEmail = emailValue.split("@")[0];
     setEditableUsername(usernameFromEmail);
     setReadOnlyUsername(usernameFromEmail);

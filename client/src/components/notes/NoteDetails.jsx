@@ -21,7 +21,6 @@ const NoteDetails = ({
           `http://localhost:3001/api/notes/get-attachments?noteId=${editedNote.id}`
         );
         setAttachments(response.data.url);
-        console.log("attachments", response.data.url);
       } catch (error) {
         console.error("Error fetching attachments:", error);
       }
@@ -125,7 +124,14 @@ const NoteDetails = ({
               type="text"
               name="labels"
               value={editedNote.labels.join(", ")}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setEditedNote((prevNote) => ({
+                  ...prevNote,
+                  labels: e.target.value
+                    .split(", ")
+                    .map((label) => label.trim()),
+                }))
+              }
             />
           ) : (
             editedNote.labels.join(", ")
@@ -138,7 +144,14 @@ const NoteDetails = ({
               type="text"
               name="keywords"
               value={editedNote.keywords.join(", ")}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setEditedNote((prevNote) => ({
+                  ...prevNote,
+                  keywords: e.target.value
+                    .split(", ")
+                    .map((keyword) => keyword.trim()),
+                }))
+              }
             />
           ) : (
             editedNote.keywords.join(", ")

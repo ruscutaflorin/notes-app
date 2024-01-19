@@ -1,4 +1,3 @@
-// ChangePassword.js
 import React, { useState } from "react";
 import "../../styles/changePassword.css";
 import { useAuthContext } from "../../hooks/useAuthContext";

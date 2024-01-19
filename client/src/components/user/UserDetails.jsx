@@ -1,4 +1,3 @@
-// UserDetails.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthContext } from "../../hooks/useAuthContext";

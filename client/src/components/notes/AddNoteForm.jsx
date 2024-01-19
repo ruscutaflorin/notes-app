@@ -27,7 +27,6 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
   const handleAttachmentChange = async (e) => {
     const file = e.target.files[0];
     if (!file || file.length === 0) {
-      // No files selected or user canceled file selection
       return;
     }
 
@@ -39,12 +38,10 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       attachments: file,
     }));
 
-    // Fetch S3 URL for uploading the attachment
     const { url } = await fetch(
       `http://localhost:3001/s3Url?type=${fileExtension}`
     ).then((res) => res.json());
 
-    // Upload the attachment to S3
     await fetch(url, {
       method: "PUT",
       headers: {
@@ -53,7 +50,6 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       body: file,
     });
 
-    // Save the S3 URL in the state (you may want to store this in the database)
     setFormData((prevData) => ({
       ...prevData,
       attachmentUrl: url.split("?")[0],
@@ -71,18 +67,26 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
         ...formData,
       }
     );
-    const part = formData.attachments.name.split(".");
-    const fileExtension = "." + part[part.length - 1];
-    // Create an attachment
-    const res = await axios.post(
-      "http://localhost:3001/api/notes/add-attachment",
-      {
-        type: fileExtension,
-        url: formData.attachmentUrl,
-        userId: formData.userId,
-        noteId: formData.id,
+
+    // Check if there's an attachment before trying to get the file extension
+    if (formData.attachments && formData.attachments.name) {
+      const part = formData.attachments.name.split(".");
+      const fileExtension = part.length > 1 ? "." + part[part.length - 1] : "";
+
+      // Only proceed with adding attachment if fileExtension is defined
+      if (fileExtension) {
+        const res = await axios.post(
+          "http://localhost:3001/api/notes/add-attachment",
+          {
+            type: fileExtension,
+            url: formData.attachmentUrl,
+            userId: formData.userId,
+            noteId: formData.id,
+          }
+        );
       }
-    );
+    }
+
     // Reset the form data
     onAddNote(response.data);
     setFormData({
@@ -93,7 +97,7 @@ const AddNoteForm = ({ onAddNote, onCloseForm, isVisible }) => {
       classId: "",
       labels: [],
       keywords: [],
-      attachments: [],
+      attachments: {}, // Ensure attachments is an object
       attachmentUrl: [],
     });
 

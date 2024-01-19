@@ -8,10 +8,11 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 
 const NotesPage = () => {
-  const { user } = useAuthContext(); // Assuming your auth context provides the user's data, adjust accordingly
+  const { user } = useAuthContext();
   const [isAddNoteFormVisible, setIsAddNoteFormVisible] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
@@ -51,18 +52,15 @@ const NotesPage = () => {
   };
 
   const handleDeleteNote = (deletedNoteId) => {
-    // Update the state by filtering out the deleted note
     setNotes((prevNotes) =>
       prevNotes.filter((note) => note.id !== deletedNoteId)
     );
   };
   const handleNoteUpdate = (updatedNote) => {
-    // Find the index of the updated note in the notes array
     const updatedNoteIndex = notes.findIndex(
       (note) => note.id === updatedNote.id
     );
 
-    // If the note is found, update the state with the new data
     if (updatedNoteIndex !== -1) {
       setNotes((prevNotes) => {
         const newNotes = [...prevNotes];
@@ -71,10 +69,40 @@ const NotesPage = () => {
       });
     }
   };
-  console.log(notes);
+
+  const splitAndTrimKeywords = (keywords) =>
+    keywords.split(",").map((keyword) => keyword.trim());
+
+  const filteredNotes = notes.filter((note) => {
+    const searchKeywords = splitAndTrimKeywords(searchQuery);
+    return (
+      searchKeywords.some((keyword) =>
+        note.keywords.includes(keyword.toLowerCase())
+      ) ||
+      searchKeywords.some((keyword) =>
+        note.labels.includes(keyword.toLowerCase())
+      ) ||
+      searchKeywords.some((keyword) =>
+        note.classId.toString().includes(keyword.toLowerCase())
+      ) ||
+      searchKeywords.some((keyword) =>
+        note.title.includes(keyword.toLowerCase())
+      ) ||
+      searchKeywords.some((keyword) =>
+        note.content.includes(keyword.toLowerCase())
+      )
+    );
+  });
+
   return (
     <div className="container-wrapper notes-wrapper">
       <div className="component-wrapper">
+        <input
+          type="text"
+          placeholder="Search by keywords, labels, or class ID"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <button onClick={() => setIsAddNoteFormVisible(true)}>Add Note</button>
         <AddNoteForm
           onAddNote={handleAddNote}
@@ -83,7 +111,7 @@ const NotesPage = () => {
         />
       </div>
       <div className="component-wrapper-notes">
-        <NotesList notes={notes} onNoteClick={handleNoteClick} />
+        <NotesList notes={filteredNotes} onNoteClick={handleNoteClick} />
       </div>
       <div className="component-wrapper">
         {selectedNote && (
