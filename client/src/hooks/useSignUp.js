@@ -22,9 +22,9 @@ export const useSignUp = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        localStorage.setItem("user", email);
+        localStorage.setItem("user", username);
 
-        dispatch({ type: "LOGIN", payload: { email } });
+        dispatch({ type: "LOGIN", payload: { username } });
 
         setIsLoading(false);
         console.log("SignUp successful:", response.data);
