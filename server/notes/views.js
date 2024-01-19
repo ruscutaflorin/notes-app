@@ -34,9 +34,7 @@ export const addAttachment = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
     const data = req.body;
-    console.log("firstTopic");
     const response = await addAttachmentService(data);
-    console.log("thirdTopic");
     return res.status(201).json(response);
   } catch (err) {
     return res.status(501).json(err.message);
@@ -65,12 +63,10 @@ export const addGroup = async (req, res) => {
     }
 
     const { groupName, userIDs, noteIds } = req.body;
-    const studyGroup = await addGroupService(groupName);
+    const studyGroup = await addGroupService(groupName, noteIds);
     const users = await getUsersById(userIDs);
-    const notes = await getUserNotes(noteIds);
 
     await studyGroup.addUsers(users);
-    await studyGroup.addNotes(notes);
 
     return res.status(201).json("StudyGroup created successfully");
   } catch (err) {
@@ -139,22 +135,17 @@ export const getNoteById = async (req, res) => {
 
 export const deleteNoteById = async (req, res) => {
   try {
-    // Validate request parameters
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    // Extract noteId from request parameters
     const { noteId } = req.query;
 
-    // Call the service function to delete the note
     await deleteNoteByIdService(noteId);
 
-    // Respond with a success message
     return res.status(200).json({ message: "Note deleted successfully" });
   } catch (error) {
-    // Handle errors and respond with an error message
     console.error(error);
     return res.status(500).json({ error: error.message });
   }

@@ -6,14 +6,46 @@ import {
   Attachment,
 } from "../../models/index.js";
 
-export const addGroupService = async (data) => {
+export const addGroupService = async (groupName, noteIds) => {
   try {
-    const newStudyGroup = await StudyGroup.create({
-      groupName: data,
+    const existingGroup = await StudyGroup.findOne({
+      where: { groupName: groupName },
     });
+
+    if (existingGroup) {
+      if (noteIds && noteIds.length > 0) {
+        const notes = await getNotesByIds(noteIds);
+        await existingGroup.addNotes(notes);
+      }
+
+      return existingGroup;
+    }
+
+    const newStudyGroup = await StudyGroup.create({
+      groupName: groupName,
+    });
+
+    if (noteIds && noteIds.length > 0) {
+      const notes = await getNotesByIds(noteIds);
+      await newStudyGroup.addNotes(notes);
+    }
+
     return newStudyGroup;
   } catch (error) {
     console.error(error);
+    throw error;
+  }
+};
+
+const getNotesByIds = async (noteIds) => {
+  try {
+    const notes = await Note.findAll({
+      where: { id: noteIds },
+    });
+    return notes;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
 
@@ -39,13 +71,11 @@ export const addAttachmentService = async (data) => {
   try {
     const { userId, noteId, ...attachmentData } = data;
 
-    // Create the Attachment model with attachmentData
     const newAttachment = await Attachment.create({
       ...attachmentData,
       userId: userId,
     });
 
-    // Associate with Note if noteId is provided
     if (noteId) {
       const note = await Note.findByPk(noteId);
       if (note) {
@@ -134,7 +164,7 @@ export const getNoteInfoById = async (noteId) => {
 
     const attachments = note.Attachments;
     if (!attachments || attachments.length === 0) {
-      throw new Error("No attachments found for the note");
+      return { url: "No attachment found!" };
     }
     const attachmentId = attachments[0].NoteAttachment.attachmentId;
     const attachment = await Attachment.findByPk(attachmentId);
@@ -147,14 +177,12 @@ export const getNoteInfoById = async (noteId) => {
 
 export const deleteNoteByIdService = async (noteId) => {
   try {
-    // Find the note by ID
     const note = await Note.findByPk(noteId);
 
     if (!note) {
       throw new Error("Note not found");
     }
 
-    // Delete the note along with its associated attachments
     await note.destroy();
 
     console.log(`Note with ID ${noteId} deleted successfully`);
@@ -172,10 +200,8 @@ export const editNoteService = async (noteId, updatedData) => {
       throw new Error("Note not found");
     }
 
-    // Update the note information with the provided data
     await note.update(updatedData);
 
-    // Fetch the updated note to include associations
     const updatedNote = await Note.findByPk(noteId);
 
     return updatedNote;
