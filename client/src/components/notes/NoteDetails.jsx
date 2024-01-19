@@ -1,9 +1,33 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import "../../styles/noteDetails.css";
 import Modal from "./Modal";
-const NoteDetails = ({ note, isVisible, onClose }) => {
+import axios from "axios";
+const NoteDetails = ({
+  note,
+  isVisible,
+  onClose,
+  onDeleteNote,
+  onNoteUpdate,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState({ ...note });
+  const [attachments, setAttachments] = useState();
+
+  useEffect(() => {
+    const fetchAttachments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/api/notes/get-attachments?noteId=${editedNote.id}`
+        );
+        setAttachments(response.data.url);
+      } catch (error) {
+        console.error("Error fetching attachments:", error);
+      }
+    };
+
+    fetchAttachments();
+  }, [editedNote.id]);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -17,10 +41,30 @@ const NoteDetails = ({ note, isVisible, onClose }) => {
     }));
   };
 
-  const handleSaveChanges = () => {
-    // Implement logic to save changes, e.g., call an API or update state
-    console.log("Saving changes:", editedNote);
-    setIsEditing(false);
+  const handleSaveChanges = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/api/notes/edit-note?noteId=${editedNote.id}`,
+        editedNote
+      );
+
+      const updatedNote = response.data;
+      onNoteUpdate(updatedNote);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating note:", error);
+    }
+  };
+  const handleDeleteNote = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:3001/api/notes/delete-note?noteId=${editedNote.id}`
+      );
+      onDeleteNote(editedNote.id);
+      onClose();
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
   };
 
   return isVisible ? (
@@ -80,7 +124,14 @@ const NoteDetails = ({ note, isVisible, onClose }) => {
               type="text"
               name="labels"
               value={editedNote.labels.join(", ")}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setEditedNote((prevNote) => ({
+                  ...prevNote,
+                  labels: e.target.value
+                    .split(", ")
+                    .map((label) => label.trim()),
+                }))
+              }
             />
           ) : (
             editedNote.labels.join(", ")
@@ -93,25 +144,41 @@ const NoteDetails = ({ note, isVisible, onClose }) => {
               type="text"
               name="keywords"
               value={editedNote.keywords.join(", ")}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setEditedNote((prevNote) => ({
+                  ...prevNote,
+                  keywords: e.target.value
+                    .split(", ")
+                    .map((keyword) => keyword.trim()),
+                }))
+              }
             />
           ) : (
             editedNote.keywords.join(", ")
           )}
         </div>
-        <div>
+        {/* <div>
           <strong>Attachments:</strong>
           <ul>
             {editedNote.attachments &&
               editedNote.attachments.map((attachment, index) => (
-                <li key={index}>{attachment}</li>
+                <li key={index}>{attachment.file.name}</li>
               ))}
+          </ul>
+        </div> */}
+        <div>
+          <strong>Attachments URLs:</strong>
+          <ul>
+            <li key={0}>{attachments}</li>
           </ul>
         </div>
         {isEditing ? (
           <button onClick={handleSaveChanges}>Save Changes</button>
         ) : (
-          <button onClick={handleEditToggle}>Edit Note</button>
+          <>
+            <button onClick={handleEditToggle}>Edit Note</button>
+            <button onClick={handleDeleteNote}>Delete Note</button>
+          </>
         )}
       </div>
     </Modal>
