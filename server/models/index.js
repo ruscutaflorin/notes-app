@@ -27,6 +27,7 @@ Note.belongsToMany(Attachment, {
   through: "NoteAttachment",
   foreignKey: "noteId",
   otherKey: "attachmentId",
+  onDelete: "CASCADE",
 });
 
 Class.hasMany(Note, { foreignKey: "classId" });
@@ -35,6 +36,7 @@ Attachment.belongsToMany(Note, {
   through: "NoteAttachment",
   foreignKey: "attachmentId",
   otherKey: "noteId",
+  onDelete: "CASCADE",
 });
 
 sequelize
@@ -45,3 +47,5 @@ sequelize
   .catch((err) => {
     console.error("Error synchronizing models with the database:", err);
   });
+
+export { sequelize, User, StudyGroup, Note, Class, Attachment };
