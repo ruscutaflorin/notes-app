@@ -64,7 +64,6 @@ const NotesPage = () => {
       prevNotes.filter((note) => note.id !== deletedNoteId)
     );
   };
-
   const handleNoteUpdate = (updatedNote) => {
     const updatedNoteIndex = notes.findIndex(
       (note) => note.id === updatedNote.id
