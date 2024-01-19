@@ -18,7 +18,7 @@ app.use(express.json());
 app.use("/api", router);
 
 app.get("/s3Url", async (req, res) => {
-  const url = await generateUploadURL();
+  const url = await generateUploadURL(req.query.type);
   res.send({ url });
 });
 
